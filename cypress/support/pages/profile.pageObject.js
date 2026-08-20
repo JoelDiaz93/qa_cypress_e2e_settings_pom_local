@@ -2,7 +2,7 @@ import PageObject from '../PageObject';
 
 class ProfilePageObject extends PageObject {
   get followUserBtn() {
-    return cy.getByDataCy('follow-user-btn');
+    return this.getByDataCy('follow-user-btn');
   }
 
   visitUser(username) {

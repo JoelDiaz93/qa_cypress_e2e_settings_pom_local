@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 const testProfileImage = '/favicon.ico';
+const defaultDestination = '/';
 
 const addLocalProfileImage = (response) => {
   const token = response.body.user.token;
@@ -48,7 +49,7 @@ Cypress.Commands.add(
     email = 'riot@qa.team',
     username = 'riot',
     password = '12345Qwert!',
-    destination = '/',
+    destination = defaultDestination,
   ) => {
     return cy.request('POST', '/api/users', {
       user: {

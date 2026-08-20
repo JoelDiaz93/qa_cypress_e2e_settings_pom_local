@@ -1,6 +1,6 @@
-import { defineConfig } from 'cypress';
-import { faker } from '@faker-js/faker';
-import { clear } from './dataBase';
+const { defineConfig } = require('cypress');
+const { faker } = require('@faker-js/faker');
+const { clear } = require('./dataBase');
 
 const generateUsername = () => {
   return `user${faker.string.alphanumeric(8).toLowerCase()}`;

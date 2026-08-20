@@ -1,5 +1,24 @@
 /// <reference types="cypress" />
 
+const testProfileImage = '/favicon.ico';
+
+const addLocalProfileImage = (response) => {
+  const token = response.body.user.token;
+
+  return cy.request({
+    method: 'PUT',
+    url: '/api/user',
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    body: {
+      user: {
+        image: testProfileImage,
+      },
+    },
+  });
+};
+
 Cypress.Commands.add('getByDataCy', (selector) => {
   return cy.get(`[data-cy^="${selector}"]`);
 });
@@ -17,6 +36,8 @@ Cypress.Commands.add(
         username,
         password,
       },
+    }).then((response) => {
+      return addLocalProfileImage(response);
     });
   },
 );
@@ -27,6 +48,7 @@ Cypress.Commands.add(
     email = 'riot@qa.team',
     username = 'riot',
     password = '12345Qwert!',
+    destination = '/',
   ) => {
     return cy.request('POST', '/api/users', {
       user: {
@@ -34,23 +56,26 @@ Cypress.Commands.add(
         username,
         password,
       },
-    }).then((response) => {
-      const user = {
-        bio: response.body.user.bio,
-        effectiveImage:
-          'https://static.productionready.io/images/smiley-cyrus.jpg',
-        email: response.body.user.email,
-        image: response.body.user.image,
-        token: response.body.user.token,
-        username: response.body.user.username,
-      };
+    })
+      .then((response) => {
+        return addLocalProfileImage(response);
+      })
+      .then((response) => {
+        const user = {
+          bio: response.body.user.bio,
+          effectiveImage: testProfileImage,
+          email: response.body.user.email,
+          image: response.body.user.image,
+          token: response.body.user.token,
+          username: response.body.user.username,
+        };
 
-      cy.visit('/', {
-        onBeforeLoad(win) {
-          win.localStorage.setItem('user', JSON.stringify(user));
-          win.document.cookie = `auth=${user.token};path=/`;
-        },
+        cy.visit(destination, {
+          onBeforeLoad(win) {
+            win.localStorage.setItem('user', JSON.stringify(user));
+            win.document.cookie = `auth=${user.token};path=/`;
+          },
+        });
       });
-    });
   },
 );

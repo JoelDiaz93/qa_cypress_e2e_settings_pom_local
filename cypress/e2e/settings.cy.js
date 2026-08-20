@@ -18,14 +18,18 @@ describe('Settings page', () => {
 
     cy.task('generateUser').then((generatedUser) => {
       user = generatedUser;
-      cy.login(user.email, user.username, user.password);
+      cy.login(
+        user.email,
+        user.username,
+        user.password,
+        settingsPage.url,
+      );
     });
 
     cy.task('generateSettingsData').then((generatedData) => {
       updatedData = generatedData;
     });
 
-    settingsPage.visit();
     settingsPage.assertLoaded();
   });
 

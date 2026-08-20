@@ -12,6 +12,7 @@ declare namespace Cypress {
       email: string,
       username: string,
       password: string,
+      destination?: string,
     ): Chainable<any>
   }
 }
